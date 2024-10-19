@@ -1,7 +1,7 @@
 <?php
 session_start(); // Mulai sesi
 
-include 'db_connect.php';
+include '../db_connect.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['username'] = $username;
 
         // Arahkan ke index.html
-        header("Location: index.html");
+        header("Location: login.html");
         exit(); // Pastikan script berhenti di sini
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;

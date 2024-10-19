@@ -1,7 +1,7 @@
 <?php
 session_start(); // Mulai sesi
 
-include 'db_connect.php';
+include '../db_connect.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Jika login berhasil, simpan data user di sesi
             $_SESSION['username'] = $username; // Menyimpan username dalam sesi
             // Arahkan ke halaman homepage
-            header("Location: homepage.html");
+            header("Location: ../index.php");
             exit(); // Berhenti di sini
         } else {
             echo "Password salah.";

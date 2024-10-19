@@ -1,10 +1,21 @@
+<?php
+
+session_start(); // Memulai sesi
+if (!isset($_SESSION['username'])) {
+    // Jika user belum login, arahkan ke halaman login
+    header("Location: ../auth/login.html");
+    exit();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>16 Tipe Kepribadian MBTI</title>
-    <link rel="stylesheet" href="homepage.css"> <!-- Link ke CSS untuk styling -->
+    <link rel="stylesheet" href="content/homepage.css"> <!-- Link ke CSS untuk styling -->
 </head>
 <body>
     <header>
@@ -15,101 +26,101 @@
             <h2>Pilih Tipe Kepribadian</h2>
             <div class="grid-container">
                 <div class="grid-item">
-                    <a href="detail.php?type=INTJ">
+                    <a href="content/detail.php?type=INTJ">
                         <img src="images/INTJ.png" alt="INTJ - Arsitek">
                         <span>INTJ - Arsitek</span>
                     </a>
                 </div>
                 <div class="grid-item">
-                    <a href="detail.php?type=INTP">
+                    <a href="content/detail.php?type=INTP">
                         <img src="images/INTP.png" alt="INTP - Logician">
                         <span>INTP - Logician</span>
                     </a>
                 </div>
                 <div class="grid-item">
-                    <a href="detail.php?type=ENTJ">
+                    <a href="content/detail.php?type=ENTJ">
                         <img src="images/ENTJ.png" alt="ENTJ - Commander">
                         <span>ENTJ - Commander</span>
                     </a>
                 </div>
                 <div class="grid-item">
-                    <a href="detail.php?type=ENTP">
+                    <a href="content/detail.php?type=ENTP">
                         <img src="images/ENTP.png" alt="ENTP - Debater">
                         <span>ENTP - Debater</span>
                     </a>
                 </div>
                 <div class="grid-item">
-                    <a href="detail.php?type=INFJ">
+                    <a href="content/detail.php?type=INFJ">
                         <img src="images/INFJ.png" alt="INFJ - Advocate">
                         <span>INFJ - Advocate</span>
                     </a>
                 </div>
                 <div class="grid-item">
-                    <a href="detail.php?type=INFP">
+                    <a href="content/detail.php?type=INFP">
                         <img src="images/INFP.png" alt="INFP - Mediator">
                         <span>INFP - Mediator</span>
                     </a>
                 </div>
                 <div class="grid-item">
-                    <a href="detail.php?type=ENFJ">
+                    <a href="content/detail.php?type=ENFJ">
                         <img src="images/ENFJ.png" alt="ENFJ - Protagonist">
                         <span>ENFJ - Protagonist</span>
                     </a>
                 </div>
                 <div class="grid-item">
-                    <a href="detail.php?type=ENFP">
+                    <a href="content/detail.php?type=ENFP">
                         <img src="images/ENFP.png" alt="ENFP - Campaigner">
                         <span>ENFP - Campaigner</span>
                     </a>
                 </div>
                 
                 <div class="grid-item">
-                    <a href="detail.php?type=ESTJ">
+                    <a href="content/detail.php?type=ESTJ">
                         <img src="images/ESTJ.png" alt="ESTJ - Executive">
                         <span>ESTJ - Executive</span>
                     </a>
                 </div>
 
                 <div class="grid-item">
-                    <a href="detail.php?type=ESFJ">
+                    <a href="content/detail.php?type=ESFJ">
                         <img src="images/ESFJ.png" alt="ESFJ - Consul">
                         <span>ESFJ - Consul</span>
                     </a>
                 </div>
 
                 <div class="grid-item">
-                    <a href="detail.php?type=ISFJ">
+                    <a href="content/detail.php?type=ISFJ">
                         <img src="images/ISFJ.png" alt="ISFJ - Defender">
                         <span>ISFJ - Defender</span>
                     </a>
                 </div>
 
                 <div class="grid-item">
-                    <a href="detail.php?type=ISTJ">
+                    <a href="content/detail.php?type=ISTJ">
                         <img src="images/ISTJ.png" alt="ISTJ - Logistician">
                         <span>ISTJ - Logistician</span>
                     </a>
                 </div>
                 <div class="grid-item">
-                    <a href="detail.php?type=ISFP">
+                    <a href="content/detail.php?type=ISFP">
                         <img src="images/ISFP.png" alt="ISFP - Adventurer">
                         <span>ISFP - Adventurer</span>
                     </a>
                 </div>
                 <div class="grid-item">
-                    <a href="detail.php?type=ESFP">
+                    <a href="content/detail.php?type=ESFP">
                         <img src="images/ESFP.png" alt="ESFP - Entertainer">
                         <span>ESFP - Entertainer</span>
                     </a>
                 </div>
                 <div class="grid-item">
-                    <a href="detail.php?type=ISTP">
+                    <a href="content/detail.php?type=ISTP">
                         <img src="images/ISTP.png" alt="ISTP - Virtuoso">
                         <span>ISTP - Virtuoso</span>
                     </a>
                 </div>
                 <div class="grid-item">
-                    <a href="detail.php?type=ESTP">
+                    <a href="content/detail.php?type=ESTP">
                         <img src="images/ESTP.png" alt="ESTP - Entrepreneur">
                         <span>ESTP - Entrepreneur</span>
                     </a>
@@ -117,10 +128,11 @@
             </div>
         </section>
         <footer>
-            <a href="logout.php">Logout</a> <!-- Tombol Logout -->
+            <a href="auth/logout.php">Logout</a> <!-- Tombol Logout -->
             <p>&copy; 2024 MBTI Personality Types</p>
-            <p>Images by twitter/@7Hrang & Website by Nofa Anak Filkom</p>
+            <p>Images by twitter/@7Hrang & Website by Nofa Anak Filkom~</p>
         </footer>
     </main>
 </body>
+
 </html>

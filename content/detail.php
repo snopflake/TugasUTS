@@ -1,6 +1,14 @@
 <?php
+session_start(); // Memulai sesi
+
+if (!isset($_SESSION['username'])) {
+    // Jika pengguna belum login, arahkan ke halaman login
+    header("Location: ../auth/login.html");
+    exit();
+}
+
 // Menyertakan file koneksi
-include 'db_connect.php';
+include '../db_connect.php';
 
 // Mendapatkan tipe kepribadian dari URL
 $type = $_GET['type'];
@@ -50,9 +58,9 @@ if ($result->num_rows > 0) {
         </div>
 
         <footer>
-            <a href="homepage.html">Kembali ke Homepage</a>
+            <a href="../index.php">Kembali ke Homepage</a>
         </footer>
-</main>
+    </main>
 
 </body>
 </html>
