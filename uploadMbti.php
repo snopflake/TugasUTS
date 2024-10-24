@@ -1,35 +1,41 @@
 <?php
-// Menghubungkan ke database
-include '../db_connect.php'; // Menggunakan file dbconnect.php
 
-// Proses ketika formulir disubmit
+session_start(); // Memulai sesi
+
+// Periksa apakah pengguna sudah login
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // Jika tidak login, redirect ke halaman login
+    header('Location: auth/login.html');
+    exit;
+}
+
+// Menghubungkan ke database
+include 'db_connect.php'; // Menggunakan file dbconnect.php
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nama = $_POST['nama'];
     $mbti = $_POST['mbti'];
+    $motto = $_POST['motto'];  // Ambil nilai motto
 
-    // Proses upload file gambar
+    // Proses upload file gambar (seperti sebelumnya)
     $gambar = $_FILES['gambar']['name'];
-    $target_dir = "uploads/"; // direktori untuk menyimpan gambar (perhatikan path)
+    $target_dir = "uploads/"; 
     $target_file = $target_dir . basename($gambar);
     
     // Pastikan direktori 'uploads' ada
     if (!file_exists($target_dir)) {
-        mkdir($target_dir, 0777, true); // Membuat direktori jika belum ada
+        mkdir($target_dir, 0777, true); 
     }
     
-    // Cek apakah file gambar sudah ada
+    // Validasi file gambar
     if (file_exists($target_file)) {
         echo "Maaf, file sudah ada.";
         exit();
     }
-
-    // Cek ukuran file gambar (maksimum 5MB)
     if ($_FILES['gambar']['size'] > 5000000) {
         echo "Maaf, ukuran file terlalu besar.";
         exit();
     }
-
-    // Tentukan format file yang diperbolehkan
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     $allowedTypes = ['jpg', 'png', 'jpeg', 'gif'];
     if (!in_array($imageFileType, $allowedTypes)) {
@@ -37,14 +43,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
-    // Pindahkan file gambar ke direktori yang ditentukan
+    // Pindahkan file dan simpan data ke database
     if (move_uploaded_file($_FILES['gambar']['tmp_name'], $target_file)) {
-        // Simpan data ke database
-        $sql = "INSERT INTO mbti_uploads (nama, mbti, gambar) VALUES ('$nama', '$mbti', '$target_file')";
+        // Simpan ke database termasuk motto
+        $sql = "INSERT INTO mbti_uploads (nama, mbti, gambar, motto) VALUES ('$nama', '$mbti', '$target_file', '$motto')";
         
         if ($conn->query($sql) === TRUE) {
-            // Redirect ke halaman hasil (jika ada)
-            header("Location: ../index.php?id=" . $conn->insert_id);
+            header("Location: index.php?id=" . $conn->insert_id);
             exit();
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
@@ -53,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "Sorry, there was an error uploading your file.";
     }
 }
+
 
 $conn->close();
 ?>
@@ -148,6 +154,16 @@ $conn->close();
             color: black; /* Judul hitam */
         }
 
+        .form-container textarea {
+            width: 100%; /* Lebar textarea sama dengan input lain */
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical; /* Mengizinkan pengguna memperbesar ukuran vertikal */
+        }
+
+
         .form-group {
             margin-bottom: 15px; /* Jarak antara grup input */
         }
@@ -187,17 +203,17 @@ $conn->close();
 
     <nav class="navbar">
         <div class="navbar-logo">
-            <a href="../index.php"><img src="../images/logo.png" alt="Logo"></a>
+            <a href="index.php"><img src="images/logo.png" alt="Logo"></a>
         </div>
         <ul class="navbar-menu">
-            <li><a href="../index.php">Beranda</a></li>
+            <li><a href="index.php">Beranda</a></li>
             <li><a href="#">Upload MBTI</a></li>
             <li><a href="content/macammbti.php">Macam MBTI</a></li>
         </ul>
     </nav>
 
     <section class="beranda">
-        <img src="../images/background2.png" alt="Background Image"> <!-- Ganti dengan path gambar yang sesuai -->
+        <img src="images/background2.png" alt="Background Image"> <!-- Ganti dengan path gambar yang sesuai -->
 
         <div class="form-container">
             <h2>Upload Data MBTI</h2> <!-- Judul di atas kolom -->
@@ -214,6 +230,12 @@ $conn->close();
                     <label for="gambar">Unggah Gambar</label>
                     <input type="file" id="gambar" name="gambar" required>
                 </div>
+                <div class="form-group">
+                    <label for="motto">Motto Hidup</label>
+                    <textarea id="motto" name="motto" placeholder="Masukkan Motto Hidup" rows="4" required></textarea>
+                </div>
+
+
                 <input type="submit" value="Simpan">
             </form>
         </div>

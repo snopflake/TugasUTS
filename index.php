@@ -1,5 +1,13 @@
 <?php
-// result.php
+session_start(); // Memulai sesi
+
+// Periksa apakah pengguna sudah login
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // Jika tidak login, redirect ke halaman login
+    header('Location: auth/login.html');
+    exit;
+}
+
 include 'db_connect.php'; // Menggunakan file dbconnect.php
 
 // Ambil semua data dari tabel mbti_uploads
@@ -126,13 +134,25 @@ $conn->close();
         }
 
         .button-group {
-            display: flex; /* Gunakan Flexbox */
-            justify-content: center; /* Rata tengah secara horizontal */
-            margin-top: 10px; /* Jarak atas */
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
         }
 
         .button-group form {
-            margin-right: 10px; /* Jarak antar tombol */
+            margin-right: 10px;
+        }
+
+        .logout-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            display: inline-block;
         }
     </style>
 </head>
@@ -144,7 +164,7 @@ $conn->close();
         </div>
         <ul class="navbar-menu">
             <li><a href="index.php">Beranda</a></li>
-            <li><a href="content/uploadMBTI.php">Upload MBTI</a></li>
+            <li><a href="uploadMBTI.php">Upload MBTI</a></li>
             <li><a href="content/macamMbti.php">Macam MBTI</a></li>
         </ul>
     </nav>
@@ -156,15 +176,17 @@ $conn->close();
             <?php if (!empty($data)): ?>
                 <?php foreach ($data as $row): ?>
                     <div class="result-card">
-                        <img src="<?php echo htmlspecialchars($row['gambar']); ?>" alt="Gambar MBTI">
-                        <h3><?php echo htmlspecialchars($row['nama']); ?></h3>
-                        <p>MBTI: <?php echo htmlspecialchars($row['mbti']); ?></p>
-                        <div class="button-group"> <!-- Tambahkan div ini -->
-                            <form action="content/update.php" method="get">
+                        <a href="detailCard.php?id=<?php echo htmlspecialchars($row['id']); ?>" style="text-decoration: none; color: inherit;">
+                            <img src="<?php echo htmlspecialchars($row['gambar']); ?>" alt="Gambar MBTI">
+                            <h3><?php echo htmlspecialchars($row['nama']); ?></h3>
+                            <p>MBTI: <?php echo htmlspecialchars($row['mbti']); ?></p>
+                        </a>
+                        <div class="button-group"> <!-- Tombol Update dan Delete -->
+                            <form action="update.php" method="get">
                                 <input type="hidden" name="id" value="<?php echo htmlspecialchars($row['id']); ?>">
                                 <button type="submit" class="btn">Update</button>
                             </form>
-                            <form action="content/delete.php" method="post" style="display:inline;">
+                            <form action="delete.php" method="post" style="display:inline;">
                                 <input type="hidden" name="id" value="<?php echo htmlspecialchars($row['id']); ?>">
                                 <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus?');">Delete</button>
                             </form>
@@ -175,7 +197,11 @@ $conn->close();
                 <p>Tidak ada data MBTI yang tersimpan.</p>
             <?php endif; ?>
         </div>
+    </div>
 
+    <!-- Tombol Logout di bawah container -->
+    <div class="container">
+        <a href="auth/logout.php" class="logout-button">Logout</a>
     </div>
 
 </body>

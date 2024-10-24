@@ -19,6 +19,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $conn->close();
-header("Location: result.php"); // Kembali ke halaman result setelah operasi
+header("Location: index.php"); // Kembali ke halaman result setelah operasi
 exit();
 ?>

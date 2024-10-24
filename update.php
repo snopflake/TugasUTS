@@ -1,6 +1,16 @@
 <?php
+
+session_start(); // Memulai sesi
+
+// Periksa apakah pengguna sudah login
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // Jika tidak login, redirect ke halaman login
+    header('Location: auth/login.html');
+    exit;
+}
+
 // Menghubungkan ke database
-include '../db_connect.php'; // Menggunakan file dbconnect.php
+include 'db_connect.php'; // Menggunakan file dbconnect.php
 
 // Ambil ID dari URL
 $id = $_GET['id'];
@@ -29,8 +39,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Data MBTI</title>
     <style>
-
-body {
+        body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -126,7 +135,8 @@ body {
         }
 
         .form-container input[type="text"],
-        .form-container input[type="file"] {
+        .form-container input[type="file"],
+        .form-container textarea {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -148,14 +158,13 @@ body {
             background-color: #57a95b; /* Warna hijau lebih gelap saat hover */
         }
 
-
     </style>
 </head>
 <body>
 
     <nav class="navbar">
         <div class="navbar-logo">
-            <a href="index.php"><img src="../images/logo.png" alt="Logo"></a>
+            <a href="index.php"><img src="images/logo.png" alt="Logo"></a>
         </div>
         <ul class="navbar-menu">
             <li><a href="#">Beranda</a></li>
@@ -165,24 +174,33 @@ body {
     </nav>
 
     <section class="beranda">
-        <img src="../images/background2.png" alt="Background Image">
+        <img src="images/background2.png" alt="Background Image">
 
         <div class="form-container">
             <h2>Update Data MBTI</h2>
             <form action="updateProcess.php" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="id" value="<?php echo htmlspecialchars($row['id']); ?>">
+                
                 <div class="form-group">
                     <label for="nama">Nama</label>
                     <input type="text" id="nama" name="nama" value="<?php echo htmlspecialchars($row['nama']); ?>" required>
                 </div>
+                
                 <div class="form-group">
                     <label for="mbti">Tipe MBTI</label>
                     <input type="text" id="mbti" name="mbti" value="<?php echo htmlspecialchars($row['mbti']); ?>" required>
                 </div>
+
                 <div class="form-group">
                     <label for="gambar">Unggah Gambar Baru (kosongkan jika tidak ingin mengubah)</label>
                     <input type="file" id="gambar" name="gambar">
                 </div>
+
+                <div class="form-group">
+                    <label for="motto">Motto Hidup</label>
+                    <textarea id="motto" name="motto" rows="4" style="width: 100%;"><?php echo htmlspecialchars($row['motto']); ?></textarea>
+                </div>
+
                 <input type="submit" value="Simpan Perubahan">
             </form>
         </div>
